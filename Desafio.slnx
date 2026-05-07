@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Desafio.Dominio/Desafio.Dominio.csproj" />
+  <Project Path="Desafio.Infraestrutura/Desafio.Infraestrutura.csproj" />
+  <Project Path="Desafio/Desafio.Aplicacao.csproj" />
+</Solution>
