@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Desafio.Dominio.Entidade
+namespace Desafio.Entities
 {
 	public class Tarefa
 	{
