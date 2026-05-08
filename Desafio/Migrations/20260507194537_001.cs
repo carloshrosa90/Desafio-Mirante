@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Desafio.Migrations
+namespace Desafio.Apresentacao.Migrations
 {
     /// <inheritdoc />
     public partial class _001 : Migration

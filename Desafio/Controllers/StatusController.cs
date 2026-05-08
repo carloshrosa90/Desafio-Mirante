@@ -3,7 +3,7 @@ using Desafio.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desafio.Controllers;
+namespace Desafio.Apresentacao.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

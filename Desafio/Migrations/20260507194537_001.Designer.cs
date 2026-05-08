@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Desafio.Migrations
+namespace Desafio.Apresentacao.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260507194537_001")]
