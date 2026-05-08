@@ -1,3 +1,4 @@
+using Desafio.Aplicacao.Dtos;
 using Desafio.Aplicacao.Interface;
 using Desafio.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -47,5 +48,31 @@ public class TarefaController : ControllerBase
 			return BadRequest(resultado.Mensagem);
 		var criada = resultado.Dados;
 		return Created($"/api/tarefa/{criada.int_id}", criada);
+	}
+
+	[HttpPut("{id:int}")]
+	public async Task<IActionResult> Alterar(int id, [FromBody] TarefaAtualizacaoDto dados, CancellationToken cancellationToken)
+	{
+		var resultado = await _tarefaService.Alterar(id, dados, cancellationToken);
+		if (!resultado.Sucesso)
+		{
+			if (resultado.Mensagem == "Tarefa nao encontrada.")
+				return NotFound(resultado.Mensagem);
+			return BadRequest(resultado.Mensagem);
+		}
+		return NoContent();
+	}
+
+	[HttpDelete("{id:int}")]
+	public async Task<IActionResult> Excluir(int id, CancellationToken cancellationToken)
+	{
+		var resultado = await _tarefaService.Excluir(id, cancellationToken);
+		if (!resultado.Sucesso)
+		{
+			if (resultado.Mensagem == "Tarefa nao encontrada.")
+				return NotFound(resultado.Mensagem);
+			return BadRequest(resultado.Mensagem);
+		}
+		return NoContent();
 	}
 }

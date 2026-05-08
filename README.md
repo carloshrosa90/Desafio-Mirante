@@ -104,6 +104,9 @@ Com a API rodando, abra:
 - `GET /api/status` - lista todos os status
 - `GET /api/tarefa` - lista todas as tarefas
 - `GET /api/tarefa/filtro?status=1&dataVencimento=2026-05-08T00:00:00` - filtra por status e/ou data de vencimento (filtro por dia ignora hora)
+- `POST /api/tarefa` - inclui uma tarefa (corpo JSON: `str_titulo`, `str_descricao`, `int_status`, `dat_vencimento`; `int_id` pode ser `0` ou omitido para novo registro)
+- `PUT /api/tarefa/{id}` - altera a tarefa (corpo JSON **sem** `int_id`: apenas `str_titulo`, `str_descricao`, `int_status`, `dat_vencimento`; o id e so na URL); resposta `204` ou `404` se nao existir
+- `DELETE /api/tarefa/{id}` - exclui a tarefa; resposta `204` ou `404` se nao existir
 
 ## Migrations (quando necessario)
 

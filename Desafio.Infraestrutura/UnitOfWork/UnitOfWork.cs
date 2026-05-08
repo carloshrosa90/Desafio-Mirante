@@ -1,5 +1,6 @@
 using Desafio.Entities;
 using Desafio.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.Infrastructure.UnitOfWork
 {
@@ -20,7 +21,17 @@ namespace Desafio.Infrastructure.UnitOfWork
 			_contexto.Tarefas.Add(tarefa);
 		}
 
-		public async Task<int> SalvarAlteracoesAsync(CancellationToken cancellationToken)
+		public async Task<Tarefa?> ObterTarefaPorId(int id, CancellationToken cancellationToken)
+		{
+			return await _contexto.Tarefas.FindAsync(new object[] { id }, cancellationToken);
+		}
+
+		public void RemoverTarefa(Tarefa tarefa)
+		{
+			_contexto.Tarefas.Remove(tarefa);
+		}
+
+		public async Task<int> SalvarTarefa(CancellationToken cancellationToken)
 		{
 			return await _contexto.SaveChangesAsync(cancellationToken);
 		}
