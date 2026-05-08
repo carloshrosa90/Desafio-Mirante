@@ -1,7 +1,7 @@
+using Desafio.Aplicacao.Interface;
 using Desafio.Entities;
-using Desafio.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Desafio.Apresentacao.Controllers;
 
@@ -9,65 +9,43 @@ namespace Desafio.Apresentacao.Controllers;
 [Route("api/[controller]")]
 public class TarefaController : ControllerBase
 {
-	private readonly AppDbContext _context;
+	private readonly ITarefa _tarefaService;
 
-	public TarefaController(AppDbContext context)
+	public TarefaController(ITarefa tarefaService)
 	{
-		_context = context;
+		_tarefaService = tarefaService;
 	}
 
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<Tarefa>>> ObterTodos(CancellationToken cancellationToken)
 	{
-		return await _context.Tarefas.AsNoTracking().ToListAsync(cancellationToken);
+		var resultado = await _tarefaService.ObterTodos(cancellationToken);
+		if (!resultado.Sucesso)
+			return BadRequest(resultado.Mensagem);
+		return Ok(resultado.Dados);
 	}
 
-	[HttpGet("{id:int}")]
-	public async Task<ActionResult<Tarefa>> ObterPorId(int id, CancellationToken cancellationToken)
+	[HttpGet("filtro")]
+	public async Task<ActionResult<IEnumerable<Tarefa>>> ObterPorFiltro(
+		[FromQuery] int? status,
+		[FromQuery]
+		[SwaggerParameter(Description = "Formato da data: yyyy-MM-dd (ex.: 2026-05-08).")]
+		DateTime? dataVencimento,
+		CancellationToken cancellationToken)
 	{
-		var item = await _context.Tarefas.AsNoTracking().FirstOrDefaultAsync(t => t.int_id == id, cancellationToken);
-		if (item is null)
-			return NotFound();
-
-		return item;
+		var resultado = await _tarefaService.ObterPorFiltro(status, dataVencimento, cancellationToken);
+		if (!resultado.Sucesso)
+			return BadRequest(resultado.Mensagem);
+		return Ok(resultado.Dados);
 	}
 
 	[HttpPost]
-	public async Task<ActionResult<Tarefa>> Criar([FromBody] Tarefa tarefa, CancellationToken cancellationToken)
+	public async Task<ActionResult<Tarefa>> Incluir([FromBody] Tarefa tarefa, CancellationToken cancellationToken)
 	{
-		_context.Tarefas.Add(tarefa);
-		await _context.SaveChangesAsync(cancellationToken);
-		return CreatedAtAction(nameof(ObterPorId), new { id = tarefa.int_id }, tarefa);
-	}
-
-	[HttpPut("{id:int}")]
-	public async Task<IActionResult> Atualizar(int id, [FromBody] Tarefa tarefa, CancellationToken cancellationToken)
-	{
-		if (id != tarefa.int_id)
-			return BadRequest();
-
-		var existente = await _context.Tarefas.FindAsync(new object[] { id }, cancellationToken);
-		if (existente is null)
-			return NotFound();
-
-		existente.str_titulo = tarefa.str_titulo;
-		existente.str_descricao = tarefa.str_descricao;
-		existente.int_status = tarefa.int_status;
-		existente.dat_vencimento = tarefa.dat_vencimento;
-
-		await _context.SaveChangesAsync(cancellationToken);
-		return NoContent();
-	}
-
-	[HttpDelete("{id:int}")]
-	public async Task<IActionResult> Excluir(int id, CancellationToken cancellationToken)
-	{
-		var existente = await _context.Tarefas.FindAsync(new object[] { id }, cancellationToken);
-		if (existente is null)
-			return NotFound();
-
-		_context.Tarefas.Remove(existente);
-		await _context.SaveChangesAsync(cancellationToken);
-		return NoContent();
+		var resultado = await _tarefaService.Incluir(tarefa, cancellationToken);
+		if (!resultado.Sucesso || resultado.Dados is null)
+			return BadRequest(resultado.Mensagem);
+		var criada = resultado.Dados;
+		return Created($"/api/tarefa/{criada.int_id}", criada);
 	}
 }

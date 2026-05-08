@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Service\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Desafio.Dominio\Desafio.Dominio.csproj" />
+    <ProjectReference Include="..\Desafio.Infraestrutura\Desafio.Infraestrutura.csproj" />
+  </ItemGroup>
+
 </Project>

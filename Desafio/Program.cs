@@ -1,4 +1,7 @@
+using Desafio.Aplicacao.Interface;
+using Desafio.Aplicacao.Service;
 using Desafio.Infrastructure.Persistence;
+using Desafio.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -16,11 +19,16 @@ builder.Services.AddSwaggerGen(options =>
 		Title = "Desafio.Apresentacao",
 		Version = "v1"
 	});
+	options.EnableAnnotations();
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+	options.UseSqlServer(
+		builder.Configuration.GetConnectionString("DefaultConnection"),
+		sql => sql.MigrationsAssembly("Desafio.Apresentacao")));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IStatus, StatusService>();
+builder.Services.AddScoped<ITarefa, TarefaService>();
 
 var app = builder.Build();
 
