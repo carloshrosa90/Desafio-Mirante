@@ -16,9 +16,75 @@ Exemplo atual:
 
 `Server=localhost;Database=Mirante;Integrated Security=True;TrustServerCertificate=True;MultipleActiveResultSets=True;`
 
-## Como rodar
+## Criar o banco de dados (SQL Server)
 
-No diretorio raiz da solucao (`Desafio`), execute:
+Execute no **SQL Server Management Studio** ou no **sqlcmd** (ajuste servidor e autenticacao conforme seu ambiente). O script abaixo cria a base **Mirante** (se ainda nao existir), as tabelas **Status** e **Tarefas** e a chave estrangeira de **int_status** para **Status**.
+
+```sql
+IF DB_ID(N'Mirante') IS NULL
+    CREATE DATABASE [Mirante];
+GO
+
+USE [Mirante];
+GO
+
+CREATE TABLE [dbo].[Status](
+    [int_id] [int] IDENTITY(1,1) NOT NULL,
+    [str_nome] [varchar](50) NOT NULL,
+    [sta_ativo] [bit] NOT NULL,
+    PRIMARY KEY CLUSTERED ([int_id] ASC)
+        WITH (
+            PAD_INDEX = OFF,
+            STATISTICS_NORECOMPUTE = OFF,
+            IGNORE_DUP_KEY = OFF,
+            ALLOW_ROW_LOCKS = ON,
+            ALLOW_PAGE_LOCKS = ON,
+            OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF
+        ) ON [PRIMARY]
+) ON [PRIMARY];
+GO
+
+CREATE TABLE [dbo].[Tarefas](
+    [int_id] [int] IDENTITY(1,1) NOT NULL,
+    [str_titulo] [varchar](250) NOT NULL,
+    [str_descricao] [varchar](max) NOT NULL,
+    [int_status] [int] NOT NULL,
+    [dat_vencimento] [datetime] NOT NULL,
+    PRIMARY KEY CLUSTERED ([int_id] ASC)
+        WITH (
+            PAD_INDEX = OFF,
+            STATISTICS_NORECOMPUTE = OFF,
+            IGNORE_DUP_KEY = OFF,
+            ALLOW_ROW_LOCKS = ON,
+            ALLOW_PAGE_LOCKS = ON,
+            OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF
+        ) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+GO
+
+ALTER TABLE [dbo].[Tarefas] WITH CHECK ADD CONSTRAINT [FK_int_status]
+    FOREIGN KEY ([int_status]) REFERENCES [dbo].[Status] ([int_id]);
+GO
+
+ALTER TABLE [dbo].[Tarefas] CHECK CONSTRAINT [FK_int_status];
+GO
+```
+
+**Observacao:** se voce ja usa **Entity Framework Migrations** (`Update-Database`), evite rodar este script no mesmo banco para nao duplicar objetos. Use **ou** migration **ou** este script manual, conforme o fluxo do time.
+
+## Como rodar (Visual Studio)
+
+1. Abra o Visual Studio.
+2. **Arquivo** > **Abrir** > **Projeto ou solucao** e selecione `Desafio.slnx` na pasta do repositorio.
+3. No **Gerenciador de Solucoes**, clique com o botao direito no projeto **Desafio.Apresentacao** (pasta `Desafio`) e escolha **Definir como Projeto de Inicializacao**.
+4. (Opcional) Confira o perfil de execucao na barra de ferramentas (**http**, **https** ou **IIS Express**), conforme `Desafio/Properties/launchSettings.json`.
+5. Pressione **F5** (com depuracao) ou **Ctrl+F5** (sem depuracao) para iniciar a API.
+
+O navegador pode abrir automaticamente na URL do Swagger (configurada no `launchSettings.json`).
+
+## Como rodar (linha de comando)
+
+Alternativa, no diretorio raiz da solucao:
 
 ```bash
 dotnet restore
