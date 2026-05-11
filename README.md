@@ -4,8 +4,8 @@ Documentacao rapida para subir a aplicacao localmente.
 
 ## Pre-requisitos
 
-- .NET SDK 8 instalado
-- SQL Server local instalado e em execucao
+- **Rodar sem Docker:** .NET SDK 8 e SQL Server local (ou acessivel na connection string).
+- **Rodar com Docker:** apenas [Docker Desktop](https://www.docker.com/products/docker-desktop/) (o compose sobe o SQL Server no conteiner; nao precisa de SQL instalado no Windows).
 
 ## Configuracao do banco
 
@@ -98,6 +98,27 @@ Com a API rodando, abra:
 
 - `http://localhost:5035/swagger`
 - ou `https://localhost:7143/swagger`
+
+## Docker (teste local)
+
+Pre-requisito: [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e em execucao (WSL 2 atualizado no Windows).
+
+Na **raiz do repositorio** (pasta que contem `docker-compose.yml` e `Dockerfile`):
+
+```bash
+docker compose up --build
+```
+
+Na primeira execucao o download das imagens pode demorar. Quando a API subir:
+
+- Swagger: `http://localhost:8080/swagger`
+- SQL Server no host (para ferramentas externas, opcional): `localhost,14333` (usuario `sa`, mesma senha definida no `docker-compose.yml`)
+
+O compose sobe o SQL Server e a API; a API aplica **migrations pendentes** na subida (`APPLY_MIGRATIONS_AT_STARTUP`). A senha do `sa` e a connection string estao no arquivo `docker-compose.yml` (uso **somente** para desenvolvimento local).
+
+Apos a primeira subida, cadastre registros na tabela **Status** (ou use seed/migration de dados) se precisar testar inclusao/alteracao de tarefas com FK de status.
+
+Para encerrar: `Ctrl+C` ou, em outro terminal, `docker compose down`. Para apagar tambem os dados do banco no volume: `docker compose down -v`.
 
 ## Endpoints principais
 

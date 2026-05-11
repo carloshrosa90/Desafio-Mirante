@@ -32,6 +32,14 @@ builder.Services.AddScoped<ITarefa, TarefaService>();
 
 var app = builder.Build();
 
+if (string.Equals(Environment.GetEnvironmentVariable("APPLY_MIGRATIONS_AT_STARTUP"), "true", StringComparison.OrdinalIgnoreCase))
+{
+	using var scope = app.Services.CreateScope();
+	var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+	if (db.Database.GetPendingMigrations().Any())
+		db.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -42,7 +50,9 @@ if (app.Environment.IsDevelopment())
 	});
 }
 
-app.UseHttpsRedirection();
+// Imagem aspnet define DOTNET_RUNNING_IN_CONTAINER=true; redirecionar para HTTPS quebra o Swagger em http://+:8080
+if (!string.Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), "true", StringComparison.OrdinalIgnoreCase))
+	app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
