@@ -7,8 +7,8 @@ namespace Desafio.Infrastructure.UnitOfWork
 		IQueryable<Status> StatusLista { get; }
 		IQueryable<Tarefa> TarefaLista { get; }
 		void AdicionarTarefa(Tarefa tarefa);
-		Task<Tarefa?> ObterTarefaPorId(int id, CancellationToken cancellationToken);
+		Task<Tarefa?> ObterTarefaPorId(int id);
 		void RemoverTarefa(Tarefa tarefa);
-		Task<int> SalvarTarefa(CancellationToken cancellationToken);
+		Task<int> SalvarTarefa();
 	}
 }

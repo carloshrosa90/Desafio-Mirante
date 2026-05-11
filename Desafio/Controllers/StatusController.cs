@@ -16,9 +16,9 @@ public class StatusController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<Status>>> ObterTodos(CancellationToken cancellationToken)
+	public async Task<ActionResult<IEnumerable<Status>>> ObterTodos()
 	{
-		var resultado = await _statusService.ObterTodos(cancellationToken);
+		var resultado = await _statusService.ObterTodos();
 		if (!resultado.Sucesso)
 			return BadRequest(resultado.Mensagem);
 		return Ok(resultado.Dados);

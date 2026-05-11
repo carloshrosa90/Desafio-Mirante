@@ -18,9 +18,9 @@ public class TarefaController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<Tarefa>>> ObterTodos(CancellationToken cancellationToken)
+	public async Task<ActionResult<IEnumerable<Tarefa>>> ObterTodos()
 	{
-		var resultado = await _tarefaService.ObterTodos(cancellationToken);
+		var resultado = await _tarefaService.ObterTodos();
 		if (!resultado.Sucesso)
 			return BadRequest(resultado.Mensagem);
 		return Ok(resultado.Dados);
@@ -31,19 +31,18 @@ public class TarefaController : ControllerBase
 		[FromQuery] int? status,
 		[FromQuery]
 		[SwaggerParameter(Description = "Formato da data: yyyy-MM-dd (ex.: 2026-05-08).")]
-		DateTime? dataVencimento,
-		CancellationToken cancellationToken)
+		DateTime? dataVencimento)
 	{
-		var resultado = await _tarefaService.ObterPorFiltro(status, dataVencimento, cancellationToken);
+		var resultado = await _tarefaService.ObterPorFiltro(status, dataVencimento);
 		if (!resultado.Sucesso)
 			return BadRequest(resultado.Mensagem);
 		return Ok(resultado.Dados);
 	}
 
 	[HttpPost]
-	public async Task<ActionResult<Tarefa>> Incluir([FromBody] Tarefa tarefa, CancellationToken cancellationToken)
+	public async Task<ActionResult<Tarefa>> Incluir([FromBody] Tarefa tarefa)
 	{
-		var resultado = await _tarefaService.Incluir(tarefa, cancellationToken);
+		var resultado = await _tarefaService.Incluir(tarefa);
 		if (!resultado.Sucesso || resultado.Dados is null)
 			return BadRequest(resultado.Mensagem);
 		var criada = resultado.Dados;
@@ -51,9 +50,9 @@ public class TarefaController : ControllerBase
 	}
 
 	[HttpPut("{id:int}")]
-	public async Task<IActionResult> Alterar(int id, [FromBody] TarefaAtualizacaoDto dados, CancellationToken cancellationToken)
+	public async Task<IActionResult> Alterar(int id, [FromBody] TarefaAtualizacaoDto dados)
 	{
-		var resultado = await _tarefaService.Alterar(id, dados, cancellationToken);
+		var resultado = await _tarefaService.Alterar(id, dados);
 		if (!resultado.Sucesso)
 		{
 			if (resultado.Mensagem == "Tarefa nao encontrada.")
@@ -64,9 +63,9 @@ public class TarefaController : ControllerBase
 	}
 
 	[HttpDelete("{id:int}")]
-	public async Task<IActionResult> Excluir(int id, CancellationToken cancellationToken)
+	public async Task<IActionResult> Excluir(int id)
 	{
-		var resultado = await _tarefaService.Excluir(id, cancellationToken);
+		var resultado = await _tarefaService.Excluir(id);
 		if (!resultado.Sucesso)
 		{
 			if (resultado.Mensagem == "Tarefa nao encontrada.")

@@ -21,9 +21,9 @@ namespace Desafio.Infrastructure.UnitOfWork
 			_contexto.Tarefas.Add(tarefa);
 		}
 
-		public async Task<Tarefa?> ObterTarefaPorId(int id, CancellationToken cancellationToken)
+		public async Task<Tarefa?> ObterTarefaPorId(int id)
 		{
-			return await _contexto.Tarefas.FindAsync(new object[] { id }, cancellationToken);
+			return await _contexto.Tarefas.FindAsync(id);
 		}
 
 		public void RemoverTarefa(Tarefa tarefa)
@@ -31,9 +31,9 @@ namespace Desafio.Infrastructure.UnitOfWork
 			_contexto.Tarefas.Remove(tarefa);
 		}
 
-		public async Task<int> SalvarTarefa(CancellationToken cancellationToken)
+		public async Task<int> SalvarTarefa()
 		{
-			return await _contexto.SaveChangesAsync(cancellationToken);
+			return await _contexto.SaveChangesAsync();
 		}
 	}
 }

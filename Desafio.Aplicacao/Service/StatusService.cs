@@ -15,11 +15,11 @@ namespace Desafio.Aplicacao.Service
 			_unidadeTrabalho = unidadeTrabalho;
 		}
 
-		public async Task<ResultadoServico<IEnumerable<Status>>> ObterTodos(CancellationToken cancellationToken)
+		public async Task<ResultadoServico<IEnumerable<Status>>> ObterTodos()
 		{
 			try
 			{
-				var lista = await _unidadeTrabalho.StatusLista.AsNoTracking().ToListAsync(cancellationToken);
+				var lista = await _unidadeTrabalho.StatusLista.AsNoTracking().ToListAsync();
 				return ResultadoServico<IEnumerable<Status>>.ComSucesso(lista);
 			}
 			catch (Exception ex)
