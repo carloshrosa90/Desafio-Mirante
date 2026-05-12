@@ -1,16 +1,16 @@
 # Desafio - API
 
-Documentacao rapida para subir a aplicacao localmente.
+Documentação rápida para subir a aplicação localmente.
 
-## Pre-requisitos
+## Pré-requisitos
 
-- **Rodar sem Docker:** .NET SDK 8 e SQL Server local (ou acessivel na connection string).
-- **Rodar com Docker:** apenas [Docker Desktop](https://www.docker.com/products/docker-desktop/) (o compose sobe o SQL Server no conteiner; nao precisa de SQL instalado no Windows).
+- **Rodar sem Docker:** .NET SDK 8 e SQL Server local (ou acessível na connection string).
+- **Rodar com Docker:** apenas [Docker Desktop](https://www.docker.com/products/docker-desktop/) (o compose sobe o SQL Server no contêiner; não precisa de SQL instalado no Windows).
 
-## Configuracao do banco
+## Configuração do banco
 
 1. Abra o arquivo `Desafio/appsettings.json`.
-2. Ajuste a string de conexao `DefaultConnection` para o seu ambiente.
+2. Ajuste a string de conexão `DefaultConnection` para o seu ambiente.
 
 Exemplo atual:
 
@@ -18,7 +18,7 @@ Exemplo atual:
 
 ## Criar o banco de dados (SQL Server)
 
-Execute no **SQL Server Management Studio** ou no **sqlcmd** (ajuste servidor e autenticacao conforme seu ambiente). O script abaixo cria a base **Mirante** (se ainda nao existir), as tabelas **Status** e **Tarefas** e a chave estrangeira de **int_status** para **Status**.
+Execute no **SQL Server Management Studio** ou no **sqlcmd** (ajuste servidor e autenticação conforme seu ambiente). O script abaixo cria a base **Mirante** (se ainda não existir), as tabelas **Status** e **Tarefas** e a chave estrangeira de **int_status** para **Status**.
 
 ```sql
 IF DB_ID(N'Mirante') IS NULL
@@ -70,21 +70,21 @@ ALTER TABLE [dbo].[Tarefas] CHECK CONSTRAINT [FK_int_status];
 GO
 ```
 
-**Observacao:** se voce ja usa **Entity Framework Migrations** (`Update-Database`), evite rodar este script no mesmo banco para nao duplicar objetos. Use **ou** migration **ou** este script manual, conforme o fluxo do time.
+**Observação:** se você já usa **Entity Framework Migrations** (`Update-Database`), evite rodar este script no mesmo banco para não duplicar objetos. Use **ou** migration **ou** este script manual, conforme o fluxo do time.
 
 ## Como rodar (Visual Studio)
 
 1. Abra o Visual Studio.
-2. **Arquivo** > **Abrir** > **Projeto ou solucao** e selecione `Desafio.slnx` na pasta do repositorio.
-3. No **Gerenciador de Solucoes**, clique com o botao direito no projeto **Desafio.Apresentacao** (pasta `Desafio`) e escolha **Definir como Projeto de Inicializacao**.
-4. (Opcional) Confira o perfil de execucao na barra de ferramentas (**http**, **https** ou **IIS Express**), conforme `Desafio/Properties/launchSettings.json`.
-5. Pressione **F5** (com depuracao) ou **Ctrl+F5** (sem depuracao) para iniciar a API.
+2. **Arquivo** > **Abrir** > **Projeto ou solução** e selecione `Desafio.slnx` na pasta do repositório.
+3. No **Gerenciador de Soluções**, clique com o botão direito no projeto **Desafio.Apresentacao** (pasta `Desafio`) e escolha **Definir como Projeto de Inicialização**.
+4. (Opcional) Confira o perfil de execução na barra de ferramentas (**http**, **https** ou **IIS Express**), conforme `Desafio/Properties/launchSettings.json`.
+5. Pressione **F5** (com depuração) ou **Ctrl+F5** (sem depuração) para iniciar a API.
 
 O navegador pode abrir automaticamente na URL do Swagger (configurada no `launchSettings.json`).
 
 ## Como rodar (linha de comando)
 
-Alternativa, no diretorio raiz da solucao:
+Alternativa, no diretório raiz da solução:
 
 ```bash
 dotnet restore
@@ -101,24 +101,24 @@ Com a API rodando, abra:
 
 ## Docker (teste local)
 
-Pre-requisito: [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e em execucao (WSL 2 atualizado no Windows).
+Pré-requisito: [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e em execução (WSL 2 atualizado no Windows).
 
-Na **raiz do repositorio** (pasta que contem `docker-compose.yml` e `Dockerfile`):
+Na **raiz do repositório** (pasta que contém `docker-compose.yml` e `Dockerfile`):
 
 ```bash
 docker compose up --build
 ```
 
-Na primeira execucao o download das imagens pode demorar. Quando a API subir:
+Na primeira execução o download das imagens pode demorar. Quando a API subir:
 
 - Swagger: `http://localhost:8080/swagger`
-- SQL Server no host (para ferramentas externas, opcional): `localhost,14333` (usuario `sa`, mesma senha definida no `docker-compose.yml`)
+- SQL Server no host (para ferramentas externas, opcional): `localhost,14333` (usuário `sa`, mesma senha definida no `docker-compose.yml`)
 
-O compose sobe o SQL Server e a API; a API aplica **migrations pendentes** na subida (`APPLY_MIGRATIONS_AT_STARTUP`). A senha do `sa` e a connection string estao no arquivo `docker-compose.yml` (uso **somente** para desenvolvimento local).
+O compose sobe o SQL Server e a API; a API aplica **migrations pendentes** na subida (`APPLY_MIGRATIONS_AT_STARTUP`). A senha do `sa` e a connection string estão no arquivo `docker-compose.yml` (uso **somente** para desenvolvimento local).
 
-Apos a primeira subida, cadastre registros na tabela **Status** (ou use seed/migration de dados) se precisar testar inclusao/alteracao de tarefas com FK de status.
+Após a primeira subida, cadastre registros na tabela **Status** (ou use seed/migration de dados) se precisar testar inclusão/alteração de tarefas com FK de status.
 
-Para encerrar: `Ctrl+C` ou, em outro terminal, `docker compose down`. Para apagar tambem os dados do banco no volume: `docker compose down -v`.
+Para encerrar: `Ctrl+C` ou, em outro terminal, `docker compose down`. Para apagar também os dados do banco no volume: `docker compose down -v`.
 
 ## Endpoints principais
 
@@ -126,10 +126,10 @@ Para encerrar: `Ctrl+C` ou, em outro terminal, `docker compose down`. Para apaga
 - `GET /api/tarefa` - lista todas as tarefas
 - `GET /api/tarefa/filtro?status=1&dataVencimento=2026-05-08T00:00:00` - filtra por status e/ou data de vencimento (filtro por dia ignora hora)
 - `POST /api/tarefa` - inclui uma tarefa (corpo JSON: `str_titulo`, `str_descricao`, `int_status`, `dat_vencimento`; `int_id` pode ser `0` ou omitido para novo registro)
-- `PUT /api/tarefa/{id}` - altera a tarefa (corpo JSON **sem** `int_id`: apenas `str_titulo`, `str_descricao`, `int_status`, `dat_vencimento`; o id e so na URL); resposta `204` ou `404` se nao existir
-- `DELETE /api/tarefa/{id}` - exclui a tarefa; resposta `204` ou `404` se nao existir
+- `PUT /api/tarefa/{id}` - altera a tarefa (corpo JSON **sem** `int_id`: apenas `str_titulo`, `str_descricao`, `int_status`, `dat_vencimento`; o id é só na URL); resposta `204` ou `404` se não existir
+- `DELETE /api/tarefa/{id}` - exclui a tarefa; resposta `204` ou `404` se não existir
 
-## Migrations (quando necessario)
+## Migrations (quando necessário)
 
 Se precisar criar nova migration:
 
