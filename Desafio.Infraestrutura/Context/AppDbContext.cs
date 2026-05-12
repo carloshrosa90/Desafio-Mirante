@@ -11,14 +11,5 @@ namespace Desafio.Infrastructure.Persistence
 		public AppDbContext(DbContextOptions options) : base(options)
 		{
 		}
-
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			modelBuilder.Entity<Tarefa>()
-				.Property(t => t.dat_vencimento)
-				.HasColumnType("datetime2");
-
-			base.OnModelCreating(modelBuilder);
-		}
 	}
 }

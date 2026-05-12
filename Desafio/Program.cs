@@ -26,6 +26,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 	options.UseSqlServer(
 		builder.Configuration.GetConnectionString("DefaultConnection"),
 		sql => sql.MigrationsAssembly("Desafio.Apresentacao")));
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStatus, StatusService>();
 builder.Services.AddScoped<ITarefa, TarefaService>();
